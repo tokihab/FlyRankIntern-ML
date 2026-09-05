@@ -1,1 +1,1 @@
-PASTE-YOUR-DEPLOYED-PAPER-URL-HERE
+https://portfolio-six-pied-61a03qtk3t.vercel.app/capstone.ipynb.pdf
