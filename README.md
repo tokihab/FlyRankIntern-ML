@@ -27,3 +27,5 @@ A stranger can reproduce this entirely in Google Colab with no local setup:
 
 ## AI Transparency
 This project was built with AI acting as a pair programmer and thought partner. I used LLMs to help debug Python scripts, structure the GitHub Actions CI pipeline, and refine the professional formatting of the final research paper. All architectural decisions, leakage audits, and cross-validation strategies were directed and manually verified by me.
+
+📖 [Read my Final Internship Retrospective here](retrospective.md)
