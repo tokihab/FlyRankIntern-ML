@@ -25,54 +25,46 @@ A stranger can reproduce this entirely in Google Colab with no local setup:
 2. Install dependencies: `pip install -r requirements.txt`
 3. Run the pipeline: `python scripts/run_all.py`
 
-Usage Examples
+# Weekly Voice AI Tech Brief Agent
 
-Once the pipeline runs, the agent ingests daily performance metrics and outputs an editorial action playbook.
+## What It Does and For Whom
+This automated workflow acts as a research agent for Senior Voice AI Architects and engineers. It replaces 6 to 8 hours of manual deep-work by gathering the latest industry news, filtering out marketing fluff, and synthesizing the technical updates into concise, 3-bullet-point briefs[cite: 11]. 
 
-Example Input Data:
-A raw CSV containing search history, impressions, click-through rates, and word counts (fact_content_daily_performance).
+## Setup Steps (Stranger-Friendly)
+This is a no-code agent built on Activepieces[cite: 11]. To reproduce it:
+1.  **Clone the Flow:** Create a new project in Activepieces (Cloud Builder)[cite: 11].
+2.  **Configure the Trigger:** Add a "Web Form" trigger to accept human input for the specific search topic[cite: 11].
+3.  **Add SerpApi:** Add a "Google Search (SerpApi)" node and input your API key. Map the search query to `{{trigger.searchTopic}} latest tech news 2026`[cite: 11].
+4.  **Add Google Gemini:** Add a "Chat Gemini" node and input your API key[cite: 11]. Map the output of the SerpApi node into the prompt.
+5.  **Add Destination:** Add a "Create Document (Google Docs)" or "Slack/Email" node to route the formatted markdown brief to your workspace[cite: 11].
 
-Example Output (Ranked Queue):
-The model assigns a win_chance score to each page and categorizes them into actionable tiers:
+## Usage Examples
+**Example Input (Web Form):** 
+`Native Audio LLMs`[cite: 11]
 
-    High Priority (Update Now): win_chance > 0.6 AND search_volume > 50
+**Example Output (Generated Brief):**
+*   **Architectural Shift to End-to-End Processing:** Native Audio LLMs are evolving into true end-to-end models that process audio directly, moving beyond traditional segmented Speech-to-Text (STT), LLM, and Text-to-Speech (TTS) pipelines[cite: 11]. 
+*   **Advanced Reasoning and Expanded Context:** New models like GPT-Realtime-2 integrate "GPT-5-class reasoning" directly into live audio loops and feature expanded context windows[cite: 11].
+*   **Specialized Models for Real-time Voice Agents:** Key models emerging in 2026, such as Deepgram Nova-3 and GPT-Realtime-2, are specifically optimized for real-time performance in voice agents[cite: 11].
 
-        Example Reason Code generated: "Stuck on Page 2+ (Needs a rankings push)"
+## Simple Architecture Sketch
+The workflow is a linear 4-step pipeline executed via Activepieces[cite: 11]:
+*   **Step 1: Trigger (Web Form):** Collects the target Voice AI topic from the user[cite: 11].
+*   **Step 2: Gather (SerpApi):** Queries Google using the target topic and extracts a JSON list of the top organic articles and snippets[cite: 11].
+*   **Step 3: Synthesize (Google Gemini 1.5 Flash):** Processes the raw JSON against a strict system prompt to extract core engineering updates (focusing on architecture, latency, and new models)[cite: 11].
+*   **Step 4: Format & Route (Google Docs / Slack):** Converts the LLM output into a clean markdown document for easy consumption[cite: 11].
 
-    Medium Priority (Quick Fixes): win_chance > 0.4
+## v2 Evaluation Results
+*   **Execution Speed:** The pipeline successfully runs a topic end-to-end in approximately 5 seconds[cite: 11].
+*   **Time Saved:** Automates a manual research process that typically takes 6 to 8 hours per week[cite: 11].
+*   **Setup Cost:** Initial workflow design, JSON mapping, and query spacing fixes took 1.5 hours upfront[cite: 11].
 
-        Example Reason Code generated: "Content is too thin (Needs more details)"
+## Limitations List
+1.  **Query Fragility:** If the search query lacks a space before the date filter, SerpApi returns zero results, which subsequently breaks the Gemini node[cite: 11].
+2.  **LLM Hallucinations on Hard Metrics:** The LLM can occasionally mix up specific millisecond latency metrics or pricing models[cite: 11]. 
+3.  **Mandatory Human Review:** Because of potential metric hallucinations, a human architect must verify exact numbers before making a hard engineering or purchasing decision based on the brief[cite: 11].
 
-    Low Priority: Leave as is.
-
-Simple Architecture Sketch
-
-    Data Source: FlyRank Internship Warehouse (March 2026 production slice, 176,738 active rows).
-
-    Features: word_count, avg_position, competition, search_volume, intent_flags.
-
-    Model Engine: Random Forest Classifier (100 trees, max depth 5).
-
-    Validation Strategy: Strict client-grouped cross-validation (pages from the same client are never split between training and test sets) to prevent data leakage.
-
-v2 Evaluation Results
-
-    Accuracy: 0.748 (74.8%)
-
-    Recall: 0.789 (The model successfully catches the vast majority of truly declining pages).
-
-    ROC-AUC (Honest Grouped Split): 0.507 (Compared to a naive random split of 0.562, proving the necessity of grouped validation).
-
-Limitations List
-
-    Directional, not causal: Identifying a declining trend does not guarantee that simply adding words or refreshing the metadata will restore its Google rankings.
-
-    Modest Generalization: The grouped AUC of 0.507 indicates that search signals alone carry limited predictive power when applied to entirely unseen clients. It acts best as a triage tool within the same training cohort.
-
-    High False Positives: Because the model optimizes for high recall (catching failing pages), it inherently flags some healthy pages as declining. Human editorial review is mandatory before deleting or rewriting any content.
-
-AI Transparency
-
-This project was built with AI acting as a pair programmer and thought partner. I used large language models to help debug Python scripts, structure the GitHub Actions CI pipeline, and refine the professional formatting of the final research paper. All architectural decisions, leakage audits, and cross-validation strategies were directed and manually verified by me.
+## AI Transparency
+This workflow was designed with AI serving as a strategic thought partner. I utilized LLMs to help craft the rigid prompt instructions used in the Gemini synthesis node and to format this documentation cleanly. All workflow steps, API node configurations, and limitation audits were executed and validated manually by me.
 
 📖 [Read my Final Internship Retrospective here](retrospective.md)
